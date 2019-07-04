@@ -1,0 +1,11 @@
+framework module AMCoreAudio {
+  umbrella header "AMCoreAudio.h"
+
+  export *
+  module * { export * }
+}
+
+module AMCoreAudio.Swift {
+    header "AMCoreAudio-Swift.h"
+    requires objc
+}
