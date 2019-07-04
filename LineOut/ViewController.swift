@@ -15,14 +15,15 @@ import AudioKit
 class ViewController: NSViewController {
 
 	@IBOutlet weak var inputDeviceMenu: NSPopUpButton!
-	@IBOutlet weak var outputDeviceMenu: NSPopUpButton!
 	@IBOutlet weak var levelIndicatorLeftChannel: NSLevelIndicator!
 	@IBOutlet weak var levelIndicatorRightChannel: NSLevelIndicator!
 
 	var inputDevices: [AudioDevice] = []
-	var outputDevices: [AudioDevice] = []
 
 	var amplitudeTracker: AKAmplitudeTracker?
+	let maxAmplitudes = 8
+	var amplitudesL: [Double] = []
+	var amplitudesR: [Double] = []
 
 	var displayLink: DisplayLink!
 
@@ -31,55 +32,65 @@ class ViewController: NSViewController {
 
 		self.levelIndicatorLeftChannel.scaleUnitSquare(to: NSSize(width: -1, height: 1))
 
-		self.populateDeviceLists()
+		self.populateInputDeviceList()
 
 		NotificationCenter.defaultCenter.subscribe(self, eventType: AudioHardwareEvent.self)
+	}
 
+	override func viewDidAppear() {
 		self.displayLink = DisplayLink()
 		self.displayLink.delegate = self
 		self.displayLink.start()
 	}
 
 	override func viewWillDisappear() {
-		print("stop displaylink")
 		self.displayLink.stop()
 	}
 
-	var _lastDate: Date?
 	private func updateMeters() {
 		guard let amplitudeTracker = self.amplitudeTracker else {
 			return
 		}
 
-		let leftAmplitudeClamped = min(amplitudeTracker.leftAmplitude, 1)
+		amplitudesL.append(amplitudeTracker.leftAmplitude)
+		amplitudesR.append(amplitudeTracker.rightAmplitude)
+		amplitudesL = amplitudesL.suffix(self.maxAmplitudes)
+		amplitudesR = amplitudesR.suffix(self.maxAmplitudes)
+
+		var leftAmplitudeClamped = min(amplitudesL.average, 1)
+		var rightAmplitudeClamped = min(amplitudesR.average, 1)
+
+		let scalar = 0.1
+		leftAmplitudeClamped = ((1+scalar)*leftAmplitudeClamped) / (scalar + leftAmplitudeClamped)
+		rightAmplitudeClamped = ((1+scalar)*rightAmplitudeClamped) / (scalar + rightAmplitudeClamped)
+
 		let leftAmplitudeRemapped = (leftAmplitudeClamped * self.levelIndicatorLeftChannel.maxValue).rounded(.up)
 		let leftAmplitude = Int(leftAmplitudeRemapped)
 		self.levelIndicatorLeftChannel.integerValue = leftAmplitude
 
-		let rightAmplitudeClamped = min(amplitudeTracker.rightAmplitude, 1)
 		let rightAmplitudeRemapped = (rightAmplitudeClamped * self.levelIndicatorRightChannel.maxValue).rounded(.up)
 		let rightAmplitude = Int(rightAmplitudeRemapped)
 		self.levelIndicatorRightChannel.integerValue = rightAmplitude
 	}
 
-	func populateDeviceLists() {
+	func populateInputDeviceList() {
 		let selectedInputTag = self.inputDeviceMenu.selectedTag()
-		let selectedOutputTag = self.outputDeviceMenu.selectedTag()
 
 		self.inputDeviceMenu.removeAllItems()
-		self.outputDeviceMenu.removeAllItems()
-
 		self.inputDevices = AudioDevice.allInputDevices()
-		self.outputDevices = AudioDevice.allOutputDevices()
 
 		print(self.inputDevices)
-		print(self.outputDevices)
 
 		if self.inputDevices.count > 0 {
 			for device in self.inputDevices {
+				guard device.transportType != .aggregate else {
+					continue
+				}
+
 				self.inputDeviceMenu.addItem(withTitle: device.name)
 				if let defaultInput = AudioDevice.defaultInputDevice(), defaultInput.id == device.id {
 					self.inputDeviceMenu.lastItem!.image = NSImage(named: "defaultInput")!
+				} else {
 				}
 				self.inputDeviceMenu.lastItem!.tag = Int(device.id)
 			}
@@ -93,29 +104,16 @@ class ViewController: NSViewController {
 			self.inputDeviceMenu.addItem(withTitle: "No input devices available")
 			self.inputDeviceMenu.isEnabled = false
 		}
+	}
 
-		if self.outputDevices.count > 0 {
-			for device in self.outputDevices {
-				self.outputDeviceMenu.addItem(withTitle: device.name)
-				if let defaultOutput = AudioDevice.defaultOutputDevice(), defaultOutput.id == device.id {
-					self.outputDeviceMenu.lastItem!.image = NSImage(named: "defaultOutput")!
-				}
-				self.outputDeviceMenu.lastItem!.tag = Int(device.id)
-			}
-
-			if !self.outputDeviceMenu.selectItem(withTag: selectedOutputTag) {
-				self.outputDeviceMenu.selectItem(at: 0)
-			}
-
-//			self.outputDeviceMenu.isEnabled = true
-		} else {
-			self.outputDeviceMenu.addItem(withTitle: "No output devices available")
-//			self.outputDeviceMenu.isEnabled = false
+	@IBAction func selectedInputDeviceChanged(_ sender: NSPopUpButton) {
+		if AudioKit.engine.isRunning {
+			restartListening()
 		}
 	}
 
 	@IBAction func toggleButtonPressed(_ sender: NSButton) {
-		if !AudioKit.engine.isRunning {
+		if !AudioKit.engine.isRunning && sender.state == .on {
 			sender.state = startListening() ? .on : .off
 		} else {
 			stopListening()
@@ -125,10 +123,19 @@ class ViewController: NSViewController {
 		print(AudioKit.engine.isRunning)
 	}
 
+	func restartListening() -> Bool {
+		stopListening()
+		RunLoop.current.run(until: .init(timeIntervalSinceNow: 0.1))
+		return startListening()
+	}
+
 	func startListening() -> Bool {
 		guard !AudioKit.engine.isRunning else {
 			return false
 		}
+
+		self.amplitudesL = []
+		self.amplitudesR = []
 
 		do {
 			let selectedInputID = self.inputDeviceMenu.selectedTag()
@@ -136,13 +143,7 @@ class ViewController: NSViewController {
 				fatalError("no input device found")
 			}
 
-//			let selectedOutputID = self.outputDeviceMenu.selectedTag()
-//			guard let selectedOutputDevice = self.outputDevices.first(where: {$0.id == selectedOutputID}) else {
-//				fatalError("no output device found")
-//			}
-
 			try AudioKit.setInputDevice(selectedInputDevice.toAKDevice())
-//			try AudioKit.setOutputDevice(selectedOutputDevice.toAKDevice())
 
 			guard let micNode = AKMicrophone() else {
 				fatalError("fuck")
@@ -160,7 +161,7 @@ class ViewController: NSViewController {
 			return true
 		} catch {
 			print("Can't start")
-			print(error.localizedDescription)
+			fatalError(error.localizedDescription)
 		}
 
 		return false
@@ -168,15 +169,18 @@ class ViewController: NSViewController {
 
 	func stopListening() {
 		guard AudioKit.engine.isRunning else {
+			print("engine is not running")
 			return
 		}
 
+		print("engine is running. will stop")
 		do {
 			try AudioKit.stop()
 			AudioKit.disconnectAllInputs()
+			print("engine shut down")
 		} catch {
 			print("Can't stop")
-			print(error.localizedDescription)
+			fatalError(error.localizedDescription)
 		}
 	}
 
@@ -190,7 +194,15 @@ extension ViewController: EventSubscriber {
 			switch event {
 			case .deviceListChanged(_, _):
 				DispatchQueue.main.async {
-					self.populateDeviceLists()
+					self.populateInputDeviceList()
+				}
+			case .defaultOutputDeviceChanged(_):
+				guard AudioKit.engine.isRunning else {
+					return
+				}
+
+				DispatchQueue.main.async {
+					self.restartListening()
 				}
 			default:
 				break

@@ -713,10 +713,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="400" height="136"/>
                                 <subviews>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z69-NN-2nO">
-                                        <rect key="frame" x="20" y="26" width="360" height="84"/>
+                                        <rect key="frame" x="20" y="52" width="360" height="58"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="horizontal" alignment="firstBaseline" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalHuggingPriority="251" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DHR-ml-O7x">
-                                                <rect key="frame" x="0.0" y="63" width="360" height="21"/>
+                                                <rect key="frame" x="0.0" y="37" width="360" height="21"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="J9h-uL-aY7">
                                                         <rect key="frame" x="-2" y="2" width="54" height="17"/>
@@ -740,46 +740,13 @@
                                                                 </items>
                                                             </menu>
                                                         </popUpButtonCell>
+                                                        <connections>
+                                                            <action selector="selectedInputDeviceChanged:" target="XfG-lQ-9wD" id="56r-Ai-1aG"/>
+                                                        </connections>
                                                     </popUpButton>
                                                 </subviews>
                                                 <visibilityPriorities>
                                                     <real value="1000"/>
-                                                    <integer value="1000"/>
-                                                </visibilityPriorities>
-                                                <customSpacing>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                </customSpacing>
-                                            </stackView>
-                                            <stackView distribution="fill" orientation="horizontal" alignment="firstBaseline" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JLe-au-sCc">
-                                                <rect key="frame" x="0.0" y="37" width="360" height="21"/>
-                                                <subviews>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5mY-K3-VWv">
-                                                        <rect key="frame" x="-2" y="2" width="54" height="17"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="50" id="1sz-WK-lrO"/>
-                                                        </constraints>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Output:" id="n6n-18-7Qx">
-                                                            <font key="font" usesAppearanceFont="YES"/>
-                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                    <popUpButton horizontalHuggingPriority="249" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QGa-RT-c28">
-                                                        <rect key="frame" x="56" y="-3" width="307" height="25"/>
-                                                        <popUpButtonCell key="cell" type="push" title="Output Devices Go Here" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" enabled="NO" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="wy7-Fl-dbT" id="Rjw-EZ-zCx">
-                                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="menu"/>
-                                                            <menu key="menu" id="7Ln-Pj-gVz">
-                                                                <items>
-                                                                    <menuItem title="Output Devices Go Here" state="on" id="wy7-Fl-dbT"/>
-                                                                </items>
-                                                            </menu>
-                                                        </popUpButtonCell>
-                                                    </popUpButton>
-                                                </subviews>
-                                                <visibilityPriorities>
-                                                    <integer value="1000"/>
                                                     <integer value="1000"/>
                                                 </visibilityPriorities>
                                                 <customSpacing>
@@ -795,7 +762,7 @@
                                                 <beginningViews>
                                                     <levelIndicator verticalHuggingPriority="750" fixedFrame="YES" drawsTieredCapacityLevels="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GUY-N2-suy">
                                                         <rect key="frame" x="0.0" y="3" width="143" height="18"/>
-                                                        <levelIndicatorCell key="cell" alignment="left" doubleValue="20" maxValue="20" warningValue="15" criticalValue="19" id="Qhv-xF-Wqg"/>
+                                                        <levelIndicatorCell key="cell" alignment="left" maxValue="20" warningValue="15" criticalValue="19" id="Qhv-xF-Wqg"/>
                                                         <color key="fillColor" name="systemGreenColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="warningFillColor" name="systemYellowColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="criticalFillColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
@@ -816,7 +783,7 @@
                                                 <endViews>
                                                     <levelIndicator verticalHuggingPriority="750" fixedFrame="YES" drawsTieredCapacityLevels="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xbf-OS-jKC">
                                                         <rect key="frame" x="217" y="3" width="143" height="18"/>
-                                                        <levelIndicatorCell key="cell" alignment="left" doubleValue="20" maxValue="20" warningValue="15" criticalValue="19" id="SLU-rk-wZe"/>
+                                                        <levelIndicatorCell key="cell" alignment="left" maxValue="20" warningValue="15" criticalValue="19" id="SLU-rk-wZe"/>
                                                         <color key="fillColor" name="systemGreenColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="warningFillColor" name="systemYellowColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="criticalFillColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
@@ -839,12 +806,10 @@
                                         </subviews>
                                         <visibilityPriorities>
                                             <integer value="1000"/>
-                                            <real value="1000"/>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
                                         </visibilityPriorities>
                                         <customSpacing>
-                                            <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
@@ -869,7 +834,6 @@
                         <outlet property="inputDeviceMenu" destination="1z2-v6-WTD" id="Lnn-97-tc0"/>
                         <outlet property="levelIndicatorLeftChannel" destination="GUY-N2-suy" id="7gN-uh-pPE"/>
                         <outlet property="levelIndicatorRightChannel" destination="Xbf-OS-jKC" id="pdK-Ok-aNd"/>
-                        <outlet property="outputDeviceMenu" destination="QGa-RT-c28" id="YV9-8x-DtS"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
