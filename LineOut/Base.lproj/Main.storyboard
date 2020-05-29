@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -706,23 +707,20 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="LineOut" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="400" height="136"/>
+                        <rect key="frame" x="0.0" y="0.0" width="400" height="104"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <visualEffectView appearanceType="inheritedVibrantDark" blendingMode="behindWindow" material="underWindowBackground" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="Zym-PK-mQJ">
-                                <rect key="frame" x="0.0" y="0.0" width="400" height="136"/>
+                                <rect key="frame" x="0.0" y="0.0" width="400" height="104"/>
                                 <subviews>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z69-NN-2nO">
-                                        <rect key="frame" x="20" y="52" width="360" height="58"/>
+                                        <rect key="frame" x="20" y="20" width="360" height="58"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="horizontal" alignment="firstBaseline" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalHuggingPriority="251" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DHR-ml-O7x">
                                                 <rect key="frame" x="0.0" y="37" width="360" height="21"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="J9h-uL-aY7">
-                                                        <rect key="frame" x="-2" y="2" width="54" height="17"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="50" id="WBp-DZ-TrD"/>
-                                                        </constraints>
+                                                        <rect key="frame" x="-2" y="3" width="39" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Input:" id="uRb-bK-RN7">
                                                             <font key="font" usesAppearanceFont="YES"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -730,10 +728,10 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <popUpButton horizontalHuggingPriority="249" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1z2-v6-WTD">
-                                                        <rect key="frame" x="56" y="-3" width="307" height="25"/>
+                                                        <rect key="frame" x="41" y="-3" width="322" height="25"/>
                                                         <popUpButtonCell key="cell" type="push" title="Input Devices Go Here" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="JgM-Hl-967" id="uCo-4b-0LM">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="menu"/>
+                                                            <font key="font" metaFont="system"/>
                                                             <menu key="menu" id="Mv2-gp-mgJ">
                                                                 <items>
                                                                     <menuItem title="Input Devices Go Here" state="on" id="JgM-Hl-967"/>
@@ -746,7 +744,7 @@
                                                     </popUpButton>
                                                 </subviews>
                                                 <visibilityPriorities>
-                                                    <real value="1000"/>
+                                                    <integer value="1000"/>
                                                     <integer value="1000"/>
                                                 </visibilityPriorities>
                                                 <customSpacing>
@@ -825,9 +823,9 @@
                         </subviews>
                         <constraints>
                             <constraint firstItem="Zym-PK-mQJ" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="6jV-Ar-3UK"/>
-                            <constraint firstItem="Zym-PK-mQJ" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="8KL-Tr-RcU"/>
+                            <constraint firstItem="Zym-PK-mQJ" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="GEb-21-cX2"/>
                             <constraint firstAttribute="trailing" secondItem="Zym-PK-mQJ" secondAttribute="trailing" id="UAy-co-7Ne"/>
-                            <constraint firstAttribute="bottom" secondItem="Zym-PK-mQJ" secondAttribute="bottom" id="ocv-Ya-5JY"/>
+                            <constraint firstAttribute="bottom" secondItem="Zym-PK-mQJ" secondAttribute="bottom" id="kl8-cA-oeJ"/>
                         </constraints>
                     </view>
                     <connections>
@@ -838,7 +836,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="77" y="470"/>
+            <point key="canvasLocation" x="77" y="459"/>
         </scene>
     </scenes>
 </document>

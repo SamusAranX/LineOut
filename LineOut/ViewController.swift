@@ -9,7 +9,6 @@
 import Cocoa
 import AVFoundation
 
-import AMCoreAudio
 import AudioKit
 
 class ViewController: NSViewController {
@@ -18,10 +17,13 @@ class ViewController: NSViewController {
 	@IBOutlet weak var levelIndicatorLeftChannel: NSLevelIndicator!
 	@IBOutlet weak var levelIndicatorRightChannel: NSLevelIndicator!
 
-	var inputDevices: [AudioDevice] = []
+	var inputDevices: [AKDevice]?
 
+	var mic: AKMicrophone?
 	var amplitudeTracker: AKAmplitudeTracker?
-	let maxAmplitudes = 8
+	var gain: AKBooster?
+
+	let maxAmplitudes = 5
 	var amplitudesL: [Double] = []
 	var amplitudesR: [Double] = []
 
@@ -33,8 +35,6 @@ class ViewController: NSViewController {
 		self.levelIndicatorLeftChannel.scaleUnitSquare(to: NSSize(width: -1, height: 1))
 
 		self.populateInputDeviceList()
-
-		NotificationCenter.defaultCenter.subscribe(self, eventType: AudioHardwareEvent.self)
 	}
 
 	override func viewDidAppear() {
@@ -44,6 +44,7 @@ class ViewController: NSViewController {
 	}
 
 	override func viewWillDisappear() {
+		self.stopListening()
 		self.displayLink.stop()
 	}
 
@@ -57,53 +58,45 @@ class ViewController: NSViewController {
 		amplitudesL = amplitudesL.suffix(self.maxAmplitudes)
 		amplitudesR = amplitudesR.suffix(self.maxAmplitudes)
 
-		var leftAmplitudeClamped = min(amplitudesL.average, 1)
-		var rightAmplitudeClamped = min(amplitudesR.average, 1)
+		let leftAmplitudeClamped = min(amplitudesL.average, 1)
+		let rightAmplitudeClamped = min(amplitudesR.average, 1)
 
-		let scalar = 0.1
-		leftAmplitudeClamped = ((1+scalar)*leftAmplitudeClamped) / (scalar + leftAmplitudeClamped)
-		rightAmplitudeClamped = ((1+scalar)*rightAmplitudeClamped) / (scalar + rightAmplitudeClamped)
+		let amplitudeL = (leftAmplitudeClamped * self.levelIndicatorLeftChannel.maxValue).rounded()
+		let amplitudeR = (rightAmplitudeClamped * self.levelIndicatorRightChannel.maxValue).rounded()
 
-		let leftAmplitudeRemapped = (leftAmplitudeClamped * self.levelIndicatorLeftChannel.maxValue).rounded(.up)
-		let leftAmplitude = Int(leftAmplitudeRemapped)
-		self.levelIndicatorLeftChannel.integerValue = leftAmplitude
+		self.levelIndicatorLeftChannel.integerValue = Int(amplitudeL)
+		self.levelIndicatorRightChannel.integerValue = Int(amplitudeR)
+	}
 
-		let rightAmplitudeRemapped = (rightAmplitudeClamped * self.levelIndicatorRightChannel.maxValue).rounded(.up)
-		let rightAmplitude = Int(rightAmplitudeRemapped)
-		self.levelIndicatorRightChannel.integerValue = rightAmplitude
+	func resetMeters() {
+		self.levelIndicatorLeftChannel.integerValue = 0
+		self.levelIndicatorRightChannel.integerValue = 0
 	}
 
 	func populateInputDeviceList() {
 		let selectedInputTag = self.inputDeviceMenu.selectedTag()
 
+		self.inputDevices = AudioKit.inputDevices
+
 		self.inputDeviceMenu.removeAllItems()
-		self.inputDevices = AudioDevice.allInputDevices()
 
-		print(self.inputDevices)
-
-		if self.inputDevices.count > 0 {
-			for device in self.inputDevices {
-				guard device.transportType != .aggregate else {
-					continue
-				}
-
-				self.inputDeviceMenu.addItem(withTitle: device.name)
-				if let defaultInput = AudioDevice.defaultInputDevice(), defaultInput.id == device.id {
-					self.inputDeviceMenu.lastItem!.image = NSImage(named: "defaultInput")!
-				} else {
-				}
-				self.inputDeviceMenu.lastItem!.tag = Int(device.id)
-			}
-
-			if !self.inputDeviceMenu.selectItem(withTag: selectedInputTag) {
-				self.inputDeviceMenu.selectItem(at: 0)
-			}
-
-			self.inputDeviceMenu.isEnabled = true
-		} else {
+		guard let inputDevices = self.inputDevices else {
 			self.inputDeviceMenu.addItem(withTitle: "No input devices available")
+			self.inputDeviceMenu.lastItem!.tag = -1
 			self.inputDeviceMenu.isEnabled = false
+			return
 		}
+
+		for device in inputDevices {
+			self.inputDeviceMenu.addItem(withTitle: "\(device.name) (\(device.deviceID))")
+			self.inputDeviceMenu.lastItem!.tag = Int(device.deviceID)
+		}
+
+		if !self.inputDeviceMenu.selectItem(withTag: selectedInputTag) {
+			self.inputDeviceMenu.selectItem(at: 0)
+		}
+
+		self.inputDeviceMenu.isEnabled = true
 	}
 
 	@IBAction func selectedInputDeviceChanged(_ sender: NSPopUpButton) {
@@ -114,24 +107,26 @@ class ViewController: NSViewController {
 
 	@IBAction func toggleButtonPressed(_ sender: NSButton) {
 		if !AudioKit.engine.isRunning && sender.state == .on {
-			sender.state = startListening() ? .on : .off
+			startListening()
+			sender.state = .on
 		} else {
 			stopListening()
 			sender.state = .off
 		}
 
-		print(AudioKit.engine.isRunning)
+		print("Engine running: \(AudioKit.engine.isRunning)")
 	}
 
-	func restartListening() -> Bool {
+	func restartListening() {
 		stopListening()
-		RunLoop.current.run(until: .init(timeIntervalSinceNow: 0.1))
-		return startListening()
+		RunLoop.current.run(until: .init(timeIntervalSinceNow: 0.05)) // avoids weird issues with macOS's audio system
+		startListening()
 	}
 
-	func startListening() -> Bool {
+	func startListening() {
 		guard !AudioKit.engine.isRunning else {
-			return false
+			print("AudioKit engine is already running!")
+			return
 		}
 
 		self.amplitudesL = []
@@ -139,35 +134,30 @@ class ViewController: NSViewController {
 
 		do {
 			let selectedInputID = self.inputDeviceMenu.selectedTag()
-			guard let selectedInputDevice = self.inputDevices.first(where: {$0.id == selectedInputID}) else {
+			guard let selectedInputDevice = self.inputDevices?.first(where: {$0.deviceID == selectedInputID}) else {
 				fatalError("no input device found")
 			}
 
-			try AudioKit.setInputDevice(selectedInputDevice.toAKDevice())
+			try AudioKit.setInputDevice(selectedInputDevice)
 
-			guard let micNode = AKMicrophone() else {
-				fatalError("fuck")
-			}
+			self.mic = AKMicrophone()
+			self.amplitudeTracker = AKAmplitudeTracker(self.mic)
+			self.amplitudeTracker?.mode = .peak
+			self.gain = AKBooster(self.amplitudeTracker, gain: 1) // hook this up to a slider later
 
-			self.amplitudeTracker = AKAmplitudeTracker(micNode)
+			AKSettings.bufferLength = .medium
 
-			AudioKit.output = self.amplitudeTracker!
+			AudioKit.output = self.gain!
 
-			AKSettings.bufferLength = .shortest
 			try AudioKit.start()
-
-			micNode.start()
-
-			return true
 		} catch {
-			print("Can't start")
 			fatalError(error.localizedDescription)
 		}
-
-		return false
 	}
 
 	func stopListening() {
+		self.resetMeters()
+
 		guard AudioKit.engine.isRunning else {
 			print("engine is not running")
 			return
@@ -176,39 +166,10 @@ class ViewController: NSViewController {
 		print("engine is running. will stop")
 		do {
 			try AudioKit.stop()
-			AudioKit.disconnectAllInputs()
 			print("engine shut down")
 		} catch {
 			print("Can't stop")
 			fatalError(error.localizedDescription)
-		}
-	}
-
-}
-
-extension ViewController: EventSubscriber {
-
-	func eventReceiver(_ event: Event) {
-		switch event {
-		case let event as AudioHardwareEvent:
-			switch event {
-			case .deviceListChanged(_, _):
-				DispatchQueue.main.async {
-					self.populateInputDeviceList()
-				}
-			case .defaultOutputDeviceChanged(_):
-				guard AudioKit.engine.isRunning else {
-					return
-				}
-
-				DispatchQueue.main.async {
-					self.restartListening()
-				}
-			default:
-				break
-			}
-		default:
-			break
 		}
 	}
 
