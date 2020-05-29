@@ -3,20 +3,19 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		560EA54222C7D90F00B449BB /* AudioDeviceExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560EA54122C7D90F00B449BB /* AudioDeviceExtensions.swift */; };
-		5612C6C122B8D16200D0A1AB /* AMCoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5612C6C022B8D16200D0A1AB /* AMCoreAudio.framework */; };
-		5612C6C322B8E0FE00D0A1AB /* AMCoreAudio.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5612C6C022B8D16200D0A1AB /* AMCoreAudio.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		56146E5822CDEDFC005FD09B /* CollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56146E5722CDEDFC005FD09B /* CollectionExtensions.swift */; };
+		561BFF512481087A00148CD2 /* AMCoreAudio in Frameworks */ = {isa = PBXBuildFile; productRef = 561BFF502481087A00148CD2 /* AMCoreAudio */; };
+		561BFF5324810BDA00148CD2 /* AudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 561BFF5224810BDA00148CD2 /* AudioKit.framework */; };
 		5686DF1F22C7CFDF0028F154 /* DisplayLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5686DF1E22C7CFDF0028F154 /* DisplayLink.swift */; };
 		56C7FA8C22B7CA95003B547D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C7FA8B22B7CA95003B547D /* AppDelegate.swift */; };
 		56C7FA8E22B7CA95003B547D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C7FA8D22B7CA95003B547D /* ViewController.swift */; };
 		56C7FA9022B7CA96003B547D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56C7FA8F22B7CA96003B547D /* Assets.xcassets */; };
 		56C7FA9322B7CA96003B547D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56C7FA9122B7CA96003B547D /* Main.storyboard */; };
-		56C7FA9F22B7CB73003B547D /* AudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56C7FA9E22B7CB73003B547D /* AudioKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,7 +25,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5612C6C322B8E0FE00D0A1AB /* AMCoreAudio.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -35,8 +33,8 @@
 
 /* Begin PBXFileReference section */
 		560EA54122C7D90F00B449BB /* AudioDeviceExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDeviceExtensions.swift; sourceTree = "<group>"; };
-		5612C6C022B8D16200D0A1AB /* AMCoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMCoreAudio.framework; sourceTree = "<group>"; };
 		56146E5722CDEDFC005FD09B /* CollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtensions.swift; sourceTree = "<group>"; };
+		561BFF5224810BDA00148CD2 /* AudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AudioKit.framework; sourceTree = "<group>"; };
 		5686DF1E22C7CFDF0028F154 /* DisplayLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayLink.swift; sourceTree = "<group>"; };
 		56C7FA8822B7CA95003B547D /* LineOut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LineOut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56C7FA8B22B7CA95003B547D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -45,7 +43,6 @@
 		56C7FA9222B7CA96003B547D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		56C7FA9422B7CA96003B547D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		56C7FA9522B7CA96003B547D /* LineOut.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LineOut.entitlements; sourceTree = "<group>"; };
-		56C7FA9E22B7CB73003B547D /* AudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AudioKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,8 +50,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5612C6C122B8D16200D0A1AB /* AMCoreAudio.framework in Frameworks */,
-				56C7FA9F22B7CB73003B547D /* AudioKit.framework in Frameworks */,
+				561BFF5324810BDA00148CD2 /* AudioKit.framework in Frameworks */,
+				561BFF512481087A00148CD2 /* AMCoreAudio in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,8 +94,7 @@
 		56C7FA9B22B7CAA0003B547D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5612C6C022B8D16200D0A1AB /* AMCoreAudio.framework */,
-				56C7FA9E22B7CB73003B547D /* AudioKit.framework */,
+				561BFF5224810BDA00148CD2 /* AudioKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -120,6 +116,9 @@
 			dependencies = (
 			);
 			name = LineOut;
+			packageProductDependencies = (
+				561BFF502481087A00148CD2 /* AMCoreAudio */,
+			);
 			productName = LineOut;
 			productReference = 56C7FA8822B7CA95003B547D /* LineOut.app */;
 			productType = "com.apple.product-type.application";
@@ -130,8 +129,9 @@
 		56C7FA8022B7CA95003B547D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1020;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = "Peter Wunder";
 				TargetAttributes = {
 					56C7FA8722B7CA95003B547D = {
@@ -156,6 +156,9 @@
 				Base,
 			);
 			mainGroup = 56C7FA7F22B7CA95003B547D;
+			packageReferences = (
+				561BFF4F2481087A00148CD2 /* XCRemoteSwiftPackageReference "AMCoreAudio" */,
+			);
 			productRefGroup = 56C7FA8922B7CA95003B547D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -324,6 +327,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = LineOut/LineOut.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 4254J4CMHQ;
@@ -349,6 +353,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = LineOut/LineOut.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 4254J4CMHQ;
@@ -391,6 +396,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		561BFF4F2481087A00148CD2 /* XCRemoteSwiftPackageReference "AMCoreAudio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:rnine/AMCoreAudio.git";
+			requirement = {
+				kind = revision;
+				revision = 92c2b2c858d602a7815e599bd763c33f157a5273;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		561BFF502481087A00148CD2 /* AMCoreAudio */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 561BFF4F2481087A00148CD2 /* XCRemoteSwiftPackageReference "AMCoreAudio" */;
+			productName = AMCoreAudio;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 56C7FA8022B7CA95003B547D /* Project object */;
 }

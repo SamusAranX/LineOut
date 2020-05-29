@@ -31,6 +31,11 @@ typedef NS_ENUM(AUParameterAddress, AKSamplerParameter)
     AKSamplerParameterFilterSustainLevel,
     AKSamplerParameterFilterReleaseDuration,
     AKSamplerParameterFilterEnable,
+    AKSamplerParameterPitchAttackDuration,
+    AKSamplerParameterPitchDecayDuration,
+    AKSamplerParameterPitchSustainLevel,
+    AKSamplerParameterPitchReleaseDuration,
+    AKSamplerParameterPitchADSRSemitones,
     AKSamplerParameterLoopThruRelease,
     AKSamplerParameterMonophonic,
     AKSamplerParameterLegato,
@@ -53,7 +58,7 @@ void doAKSamplerSetNoteFrequency(AKDSPRef pDSP, int noteNumber, float noteFreque
 void doAKSamplerBuildSimpleKeyMap(AKDSPRef pDSP);
 void doAKSamplerBuildKeyMap(AKDSPRef pDSP);
 void doAKSamplerSetLoopThruRelease(AKDSPRef pDSP, bool value);
-void doAKSamplerPlayNote(AKDSPRef pDSP, UInt8 noteNumber, UInt8 velocity, float noteFrequency);
+void doAKSamplerPlayNote(AKDSPRef pDSP, UInt8 noteNumber, UInt8 velocity);
 void doAKSamplerStopNote(AKDSPRef pDSP, UInt8 noteNumber, bool immediate);
 void doAKSamplerStopAllVoices(AKDSPRef pDSP);
 void doAKSamplerRestartVoices(AKDSPRef pDSP);
@@ -74,6 +79,7 @@ struct AKSamplerDSP : AKDSPBase, AKCoreSampler
     AKLinearParameterRamp filterCutoffRamp;
     AKLinearParameterRamp filterStrengthRamp;
     AKLinearParameterRamp filterResonanceRamp;
+    AKLinearParameterRamp pitchADSRSemitonesRamp;
     AKLinearParameterRamp glideRateRamp;
     
     AKSamplerDSP();
